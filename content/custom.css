@@ -7,7 +7,6 @@ body, .content {
 .content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
 body, html {
@@ -20,4 +19,25 @@ body, html {
     margin:0;
     padding:0;
     box-sizing: border-box;
+}
+
+.form-control {
+    background-color: unset;
+    color: white;
+    transition: ease all 0.3s;
+}
+
+    .form-control:focus {
+        background-color: unset;
+        color: white;
+    }
+
+.input-btn {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.input-with-btn {
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
 }

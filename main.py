@@ -55,8 +55,32 @@ def change_item():
     return jsonify(success=True)
 
 
+@app.route('/RemoveItem/', methods=['POST'])
+def remove_item():
+    global version
+
+    print(request.form)
+    index = int(request.form["Index"]) - 1
+
+    del supermarket_list[index]
+
+    pickle.dump(supermarket_list, open('supermarket_list.pickle', "wb"))
+    version += 1
+
+    return jsonify(success=True)
+
+
+@app.after_request
+def add_header(r):
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+
 if __name__ == "__main__":
     if os.path.exists("supermarket_list.pickle"):
         supermarket_list = pickle.load(open('supermarket_list.pickle', "rb"))
 
-    app.run('0.0.0.0', 80, debug=False, use_reloader=True)
+    app.run('0.0.0.0', 80, debug=True, use_reloader=True)

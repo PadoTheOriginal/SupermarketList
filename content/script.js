@@ -38,7 +38,7 @@ function changeItem(element) {
     let data = {};
     let valid = true;
 
-    data["Index"] = $(parent).find(">:first-child>span").text();
+    data["Index"] = $(parent).find('>:first-child>input[name="Index"]').val();
 
     $(parent).find('.item').each(function (i, e) {
         if ($(e).val() === '') {
@@ -53,6 +53,27 @@ function changeItem(element) {
 
     $.ajax({
         url: "/ChangeItem",
+        type: "Post",
+        async: true,
+        data: data,
+        dataType: "json",
+        success: function (obj) {
+            window.location.reload();
+        },
+        error: function (obj) {
+            console.log(obj);
+        }
+    });
+
+}
+
+function removeItem(element) {
+    let data = {};
+
+    data["Index"] = $(element).siblings('input[name="Index"]').val();
+
+    $.ajax({
+        url: "/RemoveItem",
         type: "Post",
         async: true,
         data: data,
