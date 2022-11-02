@@ -1,4 +1,4 @@
-# SupermarketList
+# Supermarket List
 Just a simple website to help me while buying stuff on the supermarket.
 
 Download python and after that run the command to install the requirements.
