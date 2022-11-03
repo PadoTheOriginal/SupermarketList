@@ -4,17 +4,40 @@ import pickle, os
 app = Flask("SupermaketList", template_folder="./content", static_folder="./content")
 supermarket_list = []
 version = 0
+users = []
+multiple_users_interval = False
 
 
 @app.route("/")
 def index():
+    global version
+    interval_delay = 6000
+
+    # only allow constant version check if there are multiple users
+    if multiple_users_interval:
+        interval_delay = 2000
+
     total = 'R${:,.2f}'.format(sum([item["Total"] for item in supermarket_list]))
 
-    return render_template("index.html", supermarket_list=supermarket_list, total=total, version=version)
+    return render_template("index.jinja2", supermarket_list=supermarket_list, total=total, version=version, interval_delay=interval_delay)
 
 
 @app.route("/GetVersion/", methods=['GET'])
 def get_version():
+    global multiple_users_interval
+    global version
+
+    # print(request.headers)
+
+    if (request.environ['REMOTE_ADDR'] in users):
+        users.remove(request.environ['REMOTE_ADDR'])
+
+    users.append(request.environ['REMOTE_ADDR'])
+
+    if len(users) > 1 and not multiple_users_interval:
+        multiple_users_interval = True
+        version += 1
+
     return jsonify(success=True, version=version)
 
 
@@ -59,7 +82,6 @@ def change_item():
 def remove_item():
     global version
 
-    print(request.form)
     index = int(request.form["Index"]) - 1
 
     del supermarket_list[index]
