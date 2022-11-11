@@ -14,8 +14,8 @@
 <body>
     <div class="content bg-dark">
         <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
                 <div class="card mx-2 my-5">
                     <div class="card-header">
                         Supermarket List
@@ -24,24 +24,26 @@
                         <table class="table table-dark m-0">
                             <thead class="text-center">
                                 <th style="width: 50%;">Item</th>
-                                <th style="width: 20%;">Quantity</th>
-                                <th style="width: 25%;">Price</th>
-                                <th style="width: 5%;">Total</th>
+                                <th style="width: 15%;">Qtd</th>
+                                <th style="width: 20%;">Price</th>
+                                <th style="width: 15%;">Total</th>
                             </thead>
                             <tbody>
                                 {% for item in supermarket_list %}
                                 <tr>
-                                    <td class="d-flex">
-                                        <input type="hidden" name="Index" value="{{loop.index}}">
-                                        <input class="form-control item w-100 input-with-btn" type="text"
-                                            placeholder="Item" name="Name" value="{{item.Name}}"
-                                            onchange="changeItem(this)">
-                                        <button class="btn btn-danger input-btn" type="button"
-                                            onclick="removeItem(this)">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
                                     <td>
+                                        <div class="d-flex position-relative">
+                                            <input type="hidden" name="Index" value="{{loop.index}}">
+                                            <input class="form-control item w-100 input-with-btn" type="text"
+                                                placeholder="Item" name="Name" value="{{item.Name}}"
+                                                onchange="changeItem(this)">
+                                            <button class="btn btn-danger input-btn" type="button"
+                                                onclick="removeItem(this)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="px-0">
                                         <input class="form-control item text-end" type="number" placeholder="Quantity"
                                             name="Quantity" value="{{item.Quantity}}" onchange="changeItem(this)">
                                     </td>
@@ -49,7 +51,7 @@
                                         <input class="form-control item text-end" type="number" placeholder="Price"
                                             name="Price" value="{{item.Price}}" onchange="changeItem(this)">
                                     </td>
-                                    <td class="text-center align-middle total-item-price">
+                                    <td class="text-center align-middle total-item-price ps-0">
                                         {{item.TotalFormat}}
                                     </td>
                                 </tr>
@@ -59,7 +61,7 @@
                                         <input class="form-control new-item" type="text" placeholder="New Item"
                                             name="Name">
                                     </td>
-                                    <td>
+                                    <td class="px-0">
                                         <input class="form-control new-item text-end" type="number"
                                             placeholder="Quantity" name="Quantity" value="1">
                                     </td>
@@ -67,7 +69,7 @@
                                         <input class="form-control new-item text-end" type="number" placeholder="Price"
                                             name="Price">
                                     </td>
-                                    <td class="text-start">
+                                    <td class="text-start ps-0">
                                         <button class="btn btn-light w-100" type="button"
                                             onclick="newItem()">Add</button>
                                     </td>
@@ -80,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-1"></div>
+            <div class="col-md-3"></div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

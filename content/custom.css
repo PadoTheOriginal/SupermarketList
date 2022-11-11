@@ -22,13 +22,13 @@ body, html {
 }
 
 .form-control {
-    background-color: unset;
+    background-color: var(--bs-dark-rgb);
     color: white;
     transition: ease all 0.3s;
 }
 
     .form-control:focus {
-        background-color: unset;
+        background-color: var(--bs-dark-rgb);
         color: white;
     }
 
@@ -40,4 +40,26 @@ body, html {
 .input-with-btn {
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
+}
+
+.input-with-btn:focus {
+    background-color: var(--bs-dark-rgb);
+    position: absolute;
+    border-radius: 0.25rem;
+}
+
+.input-with-btn:focus + button {
+    opacity: 0;
+}
+
+@media (min-width:601px) {
+    .form-control:focus {
+        scale: 1.03;
+    }
+}
+
+@media (max-width:600px) {
+    .form-control:focus {
+        scale: 1.1;
+    }
 }

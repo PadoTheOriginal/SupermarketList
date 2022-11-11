@@ -28,6 +28,8 @@ function newItem() {
     let data = {};
     let valid = true;
 
+    let new_item_btn = $('.new-items').find('button');
+
     $('.new-item').each(function (i, element) {
         if ($(element).val() === '') {
             $(element).focus();
@@ -38,6 +40,8 @@ function newItem() {
     });
 
     if (valid == false) return 0;
+
+    new_item_btn.prop('disabled', true);
 
     $.ajax({
         url: "/NewItem",
@@ -50,24 +54,22 @@ function newItem() {
                 supermarket_list_version = obj.version;
                 localStorage.clear();
 
-                let index = 1;
-
-                $('input[name="Index"]').each(function (i, element) {
-                    index = $(element).val() > index ? $(element).val() : index;
-                });
+                let index = obj.list_len;
 
                 let htmlTR = `<tr>
-                                <td class="d-flex">
-                                    <input type="hidden" name="Index" value="${index}">
-                                    <input class="form-control item w-100 input-with-btn" type="text"
+                                <td>
+                                    <div class="d-flex position-relative">
+                                        <input type="hidden" name="Index" value="${index}">
+                                        <input class="form-control item w-100 input-with-btn" type="text"
                                         placeholder="Item" name="Name" value="${obj.supermarket_item.Name}"
                                         onchange="changeItem(this)">
-                                    <button class="btn btn-danger input-btn" type="button"
+                                        <button class="btn btn-danger input-btn" type="button"
                                         onclick="removeItem(this)">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
                                 </td>
-                                <td>
+                                <td class="px-0">
                                     <input class="form-control item text-end" type="number" placeholder="Quantity"
                                         name="Quantity" value="${obj.supermarket_item.Quantity}" onchange="changeItem(this)">
                                 </td>
@@ -75,12 +77,12 @@ function newItem() {
                                     <input class="form-control item text-end" type="number" placeholder="Price"
                                         name="Price" value="${obj.supermarket_item.Price}" onchange="changeItem(this)">
                                 </td>
-                                <td class="text-center align-middle total-item-price">
+                                <td class="text-center align-middle total-item-price ps-0">
                                     ${obj.supermarket_item.TotalFormat}
                                 </td>
                             </tr>`;
 
-                
+
                 $('.new-items').before($(htmlTR));
 
                 $('.new-item').val(null);
@@ -96,8 +98,8 @@ function newItem() {
                     if ($(this).val() < 0) $(this).val(0);
                 });
 
-
                 $('.total-price').text(`Total: ${obj.total_formatted}`);
+                new_item_btn.prop('disabled', false);
             }
         },
         error: function (obj) {
@@ -112,7 +114,7 @@ function changeItem(element) {
     let data = {};
     let valid = true;
 
-    data["Index"] = $(parent).find('>:first-child>input[name="Index"]').val();
+    data["Index"] = $(parent).find('>:first-child>div>input[name="Index"]').val();
 
     $(parent).find('.item').each(function (i, element) {
         let element_name = $(element).attr("name");
@@ -121,7 +123,7 @@ function changeItem(element) {
             $(element).focus();
             valid = false;
         }
-        
+
         if ($(element).val() < 1 && element_name === "Quantity") $(element).val(1);
 
         if ($(element).val() < 0 && element_name === "Price") $(element).val(0);
@@ -154,8 +156,11 @@ function changeItem(element) {
 
 function removeItem(element) {
     let data = {};
+    let parent = $(element).parents('tr');
 
     data["Index"] = $(element).siblings('input[name="Index"]').val();
+
+    $(element).prop('disabled', true);
 
     $.ajax({
         url: "/RemoveItem",
@@ -164,7 +169,7 @@ function removeItem(element) {
         data: data,
         dataType: "json",
         success: function (obj) {
-            window.location.reload();
+            $(parent).remove();
         },
         error: function (obj) {
             console.log(obj);

@@ -46,7 +46,7 @@ def new_item():
     total = sum([item["Total"] for item in supermarket_list])
     total_formatted = 'R${:,.2f}'.format(total)
 
-    return jsonify(success=True, version=version, supermarket_item=supermarket_item, total_formatted=total_formatted)
+    return jsonify(success=True, version=version, supermarket_item=supermarket_item, total_formatted=total_formatted, list_len=len(supermarket_list))
 
 
 @app.route('/ChangeItem/', methods=['POST'])
