@@ -81,8 +81,10 @@ def remove_item():
 
     pickle.dump(supermarket_list, open('supermarket_list.pickle', "wb"))
     version += 1
+    total = sum([item["Total"] for item in supermarket_list])
+    total_formatted = 'R${:,.2f}'.format(total)
 
-    return jsonify(success=True)
+    return jsonify(success=True, version=version, total_formatted=total_formatted)
 
 
 @app.after_request

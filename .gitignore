@@ -20,6 +20,7 @@ parts/
 sdist/
 var/
 .idea/
+.vscode/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/

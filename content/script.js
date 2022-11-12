@@ -1,14 +1,6 @@
 $(function () {
-    // Makes sure the quantity can never be less than one
-    $('input[name="Quantity"]').on("change", function () {
-        if ($(this).val() < 1) $(this).val(1);
-    });
-
-    // Makes sure the price can never be less than zero
-    $('input[name="Price"]').on("keyup change", function () {
-        if ($(this).val() < 0) $(this).val(0);
-    });
-
+    init_input_rules();
+    
     // Saves new-item input value on local storage on change
     $('.new-item').on("keyup change", function () {
         let name = $(this).attr("name");
@@ -23,6 +15,21 @@ $(function () {
         if (item_value !== null) $(element).val(item_value);
     });
 });
+
+function init_input_rules() {
+    $('.new-item').val(null);
+    $('input[name="Quantity"][value=""]').val(1);
+
+    // Makes sure the quantity can never be less than one
+    $('input[name="Quantity"]').on("change", function () {
+        if ($(this).val() < 1) $(this).val(1);
+    });
+
+    // Makes sure the price can never be less than zero
+    $('input[name="Price"]').on("keyup change", function () {
+        if ($(this).val() < 0) $(this).val(0);
+    });
+}
 
 function newItem() {
     let data = {};
@@ -56,7 +63,7 @@ function newItem() {
 
                 let index = obj.list_len;
 
-                let htmlTR = `<tr>
+                let htmlTR = `<tr class="item-tr">
                                 <td>
                                     <div class="d-flex position-relative">
                                         <input type="hidden" name="Index" value="${index}">
@@ -85,50 +92,36 @@ function newItem() {
 
                 $('.new-items').before($(htmlTR));
 
-                $('.new-item').val(null);
-                $('input[name="Quantity"].new-item').val(1);
-
-                // Makes sure the quantity can never be less than one
-                $('input[name="Quantity"]').on("change", function () {
-                    if ($(this).val() < 1) $(this).val(1);
-                });
-
-                // Makes sure the price can never be less than zero
-                $('input[name="Price"]').on("keyup change", function () {
-                    if ($(this).val() < 0) $(this).val(0);
-                });
+                init_input_rules();
 
                 $('.total-price').text(`Total: ${obj.total_formatted}`);
                 new_item_btn.prop('disabled', false);
             }
         },
         error: function (obj) {
-            console.log(obj);
+            alert('Error');
         }
     });
 }
 
 function changeItem(element) {
-    let parent = $(element).parents('tr');
-
     let data = {};
     let valid = true;
+    let parent = $(element).parents('tr');
 
     data["Index"] = $(parent).find('>:first-child>div>input[name="Index"]').val();
 
     $(parent).find('.item').each(function (i, element) {
-        let element_name = $(element).attr("name");
-
         if ($(element).val() === '') {
             $(element).focus();
             valid = false;
         }
 
-        if ($(element).val() < 1 && element_name === "Quantity") $(element).val(1);
+        if ($(element).val() < 1 && $(element).attr("name") === "Quantity") $(element).val(1);
 
-        if ($(element).val() < 0 && element_name === "Price") $(element).val(0);
+        if ($(element).val() < 0 && $(element).attr("name") === "Price") $(element).val(0);
 
-        data[element_name] = $(element).val();
+        data[$(element).attr("name")] = $(element).val();
     });
 
     if (valid == false) return 0;
@@ -169,10 +162,21 @@ function removeItem(element) {
         data: data,
         dataType: "json",
         success: function (obj) {
-            $(parent).remove();
+            if (obj.success === true) {
+                supermarket_list_version = obj.version;
+
+                $(parent).remove();
+
+                // Updates item indexes
+                $(".item-tr").each(function (i, element) {
+                    $(element).find('input[name="Index"]').val(i + 1);
+                });
+
+                $('.total-price').text(`Total: ${obj.total_formatted}`);
+            }
         },
         error: function (obj) {
-            console.log(obj);
+            alert('Error');
         }
     });
 
@@ -180,7 +184,6 @@ function removeItem(element) {
 
 // just so I can have my supermarket list synced between multiple devices (Super important!!)
 function checkForUpdate() {
-
     $.ajax({
         url: "/GetVersion",
         type: "Get",

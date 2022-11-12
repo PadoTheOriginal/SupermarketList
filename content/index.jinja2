@@ -30,7 +30,7 @@
                             </thead>
                             <tbody>
                                 {% for item in supermarket_list %}
-                                <tr>
+                                <tr class="item-tr">
                                     <td>
                                         <div class="d-flex position-relative">
                                             <input type="hidden" name="Index" value="{{loop.index}}">
@@ -93,14 +93,10 @@
     <script>
         var supermarket_list_version = {{ version }};
         $(function () {
-
             setInterval(function () {
                 checkForUpdate();
             }, {{ interval_delay }});
-
-    });
-
-
+        });
     </script>
 </body>
 
