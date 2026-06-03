@@ -1,69 +1,514 @@
-body, .content {
-    height: 100vh;
-    width: 100%;
-    overflow-x: hidden;
+/* ===== Global Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .content {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: 20px;
 }
 
-body, html {
-    margin:0!important;
-    padding:0!important;
-    box-sizing: border-box;
+/* ===== Header Styles ===== */
+.app-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-* {
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
 }
 
-.form-control {
-    background-color: var(--bs-dark-rgb);
+.header-title {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-new-list {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
     color: white;
-    transition: ease all 0.3s;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
 }
 
-    .form-control:focus {
-        background-color: var(--bs-dark-rgb);
-        color: white;
+.btn-new-list:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    color: white;
+}
+
+.btn-new-list:active {
+    transform: translateY(0);
+}
+
+/* ===== Main Container ===== */
+.main-container {
+    flex: 1;
+    padding: 20px 0;
+}
+
+.lists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 450px), 1fr));
+    gap: 20px;
+    padding: 0 15px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .lists-grid {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+    }
+}
+
+/* ===== Shopping Card ===== */
+.shopping-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.shopping-card:hover {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* ===== Card Header ===== */
+.card-header-modern {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+    padding: 0;
+}
+
+.header-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 16px 20px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.header-toggle:hover {
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.header-title-section {
+    flex: 1;
+}
+
+.list-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 4px 0;
+}
+
+.item-count {
+    font-size: 13px;
+    color: #999;
+    font-weight: 500;
+}
+
+.toggle-icon {
+    color: #667eea;
+    transition: transform 0.3s ease;
+    font-size: 14px;
+}
+
+.card-header-modern .header-toggle[aria-expanded="false"] .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+/* ===== Card Content ===== */
+.card-content {
+    flex: 1;
+}
+
+.items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+}
+
+/* ===== Item Row ===== */
+.item-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.item-row:hover {
+    background: #f0f1ff;
+}
+
+@media (max-width: 768px) {
+    .item-row {
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    .item-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
+
+/* ===== Item Name Section ===== */
+.item-name-section {
+    min-width: 0;
+}
+
+/* ===== Item Fields ===== */
+.item-fields {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+@media (max-width: 600px) {
+    .item-fields {
+        width: 100%;
+        grid-column: 1 / -1;
+    }
+}
+
+.field-group {
+    flex: 0 0 auto;
+}
+
+/* ===== Form Controls ===== */
+.item-input {
+    background: white;
+    border: 1.5px solid #e0e0e0;
+    color: #333;
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    height: 40px;
+}
+
+.item-input::placeholder {
+    color: #bbb;
+}
+
+.item-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: white;
+    outline: none;
+}
+
+.item-name-section .item-input {
+    width: 100%;
+}
+
+.qty-input {
+    width: 70px;
+}
+
+.price-input {
+    width: 80px;
+}
+
+@media (max-width: 768px) {
+    .qty-input {
+        width: 60px;
     }
 
-.input-btn {
-    border-bottom-left-radius: 0px;
-    border-top-left-radius: 0px;
-}
-
-.input-with-btn {
-    border-bottom-right-radius: 0px;
-    border-top-right-radius: 0px;
-}
-
-.input-with-btn:focus {
-    background-color: var(--bs-dark-rgb);
-    position: absolute;
-    border-radius: 0.25rem;
-}
-
-.input-with-btn:focus + button {
-    opacity: 0;
-}
-
-@media (min-width:601px) {
-    .form-control:focus {
-        scale: 1.03;
+    .price-input {
+        width: 70px;
     }
 }
 
-@media (max-width:600px) {
-    .form-control:focus {
-        scale: 1.06;
+@media (max-width: 600px) {
+    .qty-input,
+    .price-input {
+        width: 100%;
     }
+}
+
+/* ===== Total Display ===== */
+.total-display {
+    min-width: 70px;
+    text-align: right;
+}
+
+.total-item-price,
+.new-item-placeholder {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 14px;
+}
+
+.new-item-placeholder {
+    color: #bbb;
+}
+
+/* ===== Delete Button ===== */
+.btn-delete {
+    background: #ff6b6b;
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+.btn-delete:hover {
+    background: #ff5252;
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.btn-delete:active {
+    transform: scale(0.96);
+}
+
+/* ===== Add Button ===== */
+.btn-add {
+    background: #51cf66;
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+.btn-add:hover {
+    background: #40c057;
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(81, 207, 102, 0.4);
+}
+
+.btn-add:active {
+    transform: scale(0.96);
+}
+
+@media (max-width: 600px) {
+    .btn-delete,
+    .btn-add {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ===== New Items Row ===== */
+.new-items-row {
+    background: #f0f1ff;
+    border: 2px dashed #667eea;
+}
+
+.new-items-row:hover {
+    background: #e8e9ff;
+}
+
+/* ===== Card Footer ===== */
+.card-footer-modern {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+    border-top: 2px solid rgba(102, 126, 234, 0.2);
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+}
+
+.footer-total {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== Collapse Animation ===== */
+.collapse {
+    transition: max-height 0.35s ease, opacity 0.35s ease;
 }
 
 .collapsing {
     transition: all 0.35s ease;
+}
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.4);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.6);
+}
+
+/* ===== Mobile Optimizations ===== */
+@media (max-width: 600px) {
+    .app-header {
+        padding: 15px 0;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .header-title {
+        font-size: 24px;
+    }
+
+    .btn-new-list {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .items-container {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .card-header-modern {
+        padding: 0;
+    }
+
+    .header-toggle {
+        padding: 14px 14px;
+    }
+
+    .list-title {
+        font-size: 18px;
+    }
+
+    .item-count {
+        font-size: 12px;
+    }
+}
+
+/* ===== Touch-friendly adjustments ===== */
+@media (hover: none) and (pointer: coarse) {
+    button {
+        padding: 12px 16px;
+        min-height: 44px;
+    }
+
+    .item-input {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .btn-delete,
+    .btn-add {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* ===== Focus Styles for Accessibility ===== */
+.item-input:focus,
+button:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* ===== Animation for new items ===== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.item-row {
+    animation: slideIn 0.3s ease;
 }
