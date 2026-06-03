@@ -1,1 +1,4 @@
 flask
+bcrypt
+flask_httpauth
+sqlite3

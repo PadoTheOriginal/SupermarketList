@@ -60,6 +60,10 @@ body, html {
 
 @media (max-width:600px) {
     .form-control:focus {
-        scale: 1.1;
+        scale: 1.06;
     }
+}
+
+.collapsing {
+    transition: all 0.35s ease;
 }

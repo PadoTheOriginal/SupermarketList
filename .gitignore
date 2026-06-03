@@ -29,6 +29,8 @@ share/python-wheels/
 *.egg
 *.pickle
 MANIFEST
+sqlite.db
+*.pem
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
