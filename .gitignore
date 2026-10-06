@@ -132,3 +132,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Local instance data
+app/.secret_key
+app/sqlite.db-wal
+app/sqlite.db-shm
+
+.claude/
