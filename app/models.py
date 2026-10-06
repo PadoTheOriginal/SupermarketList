@@ -1,91 +1,85 @@
-from database import DataBase
+"""Domain objects for the shopping list app.
 
+These are plain data holders: everything that touches SQLite lives in
+``database.py``.
+"""
+from dataclasses import dataclass, field
+
+
+@dataclass
 class User:
-    def __init__(self, userId, username, passwordHash, supermarketList = True):
-        self.UserId: int = userId
-        self.Username: str = username
-        self.PasswordHash: str = passwordHash
-        self.Online: bool = False
-        self.SupermarketLists = []
-        if supermarketList:
-            self.SupermarketLists:list(SupermarketList) = SupermarketList.GetSupermarketLists(userId)
-
-    def __str__(self):
-        return str((self.UserId, self.Username, self.PasswordHash, self.Online, self.SupermarketLists))
-
-    @staticmethod
-    def GetUsers():
-        return DataBase().GetUsers()
-
-    @staticmethod
-    def GetUser(username, supermarketList):
-        return DataBase().GetUser(username, supermarketList)
-    
-class SupermarketList:
-    def __init__(self, supermarketListId, name, ownerId, order):
-        self.SupermarketListId:int = supermarketListId
-        self.Name:str = name
-        self.OwnerId:int = ownerId
-        self.Order:int = order
-        self.SupermarketItems:list(SupermarketItem) = SupermarketItem.GetSupermarketItems(supermarketListId)
-    
-    def __str__(self):
-        return str((self.SupermarketListId, self.Name, self.OwnerId, self.Order))
-
-    @property
-    def Total(self):
-        return sum([item.Total for item in self.SupermarketItems])
-    
-    @property
-    def TotalFormatted(self):
-        return 'R${:,.2f}'.format(self.Total)
-        
-    @staticmethod
-    def GetSupermarketLists(ownerId):
-        return DataBase().GetSupermarketLists(ownerId)
-        
-    @staticmethod
-    def GetSupermarketListTotalFormatted(supermarketListId):
-        return 'R${:,.2f}'.format(DataBase().GetSupermarketListTotal(supermarketListId))
-    
-class SupermarketItem:
-    def __init__(self, supermarketItemId, name, quantity, price, supermarketListId):
-        self.SupermarketItemId:int = supermarketItemId
-        self.Name:str = name
-        self.Quantity:int = quantity
-        self.Price:float = price
-        self.SupermarketListId:int = supermarketListId
-
+    UserId: int
+    Username: str
+    PasswordHash: str
+    IsAdmin: bool = False
+    CanShare: bool = False
+    SessionEpoch: int = 0
 
     def ToDict(self):
-        return {'SupermarketItemId': self.SupermarketItemId,
-                'Name': self.Name,
-                'Quantity': self.Quantity,
-                'Price': self.Price,
-                'SupermarketListId': self.SupermarketListId,
-                'Total': self.Total,
-                'TotalFormatted': self.TotalFormatted
-                }
+        return {
+            "id": self.UserId,
+            "username": self.Username,
+            "isAdmin": bool(self.IsAdmin),
+            "canShare": bool(self.CanShare),
+        }
+
+
+@dataclass
+class SupermarketItem:
+    SupermarketItemId: int
+    Name: str
+    Quantity: float
+    Price: float
+    SupermarketListId: int
+    Checked: bool = False
+    Position: int = 0
 
     @property
     def Total(self):
-        return self.Price * self.Quantity 
-    
+        return self.Quantity * self.Price
+
+    def ToDict(self):
+        return {
+            "id": self.SupermarketItemId,
+            "listId": self.SupermarketListId,
+            "name": self.Name,
+            "quantity": self.Quantity,
+            "price": self.Price,
+            "checked": self.Checked,
+            "position": self.Position,
+            "total": round(self.Total, 2),
+        }
+
+
+@dataclass
+class SupermarketList:
+    SupermarketListId: int
+    Name: str
+    OwnerId: int
+    Position: int = 0
+    SupermarketItems: list = field(default_factory=list)
+    # Populated for the acting user: who owns the list, and whether it reached
+    # them through a share rather than being their own.
+    OwnerName: str = None
+    Shared: bool = False
+
     @property
-    def TotalFormatted(self):
-        return 'R${:,.2f}'.format(self.Total)
-    
-    @staticmethod
-    def GetSupermarketItems(supermarketListId):
-        return DataBase().GetSupermarketItems(supermarketListId)
-    
-    def InsertSupermarketItem(self):
-        return DataBase().InsertSupermarketItem(self)
-    
-    def UpdateSupermarketItem(self):
-        return DataBase().UpdateSupermarketItem(self)
-    
-    @staticmethod
-    def DeleteSupermarketItem(supermarketItemId):
-        return DataBase().DeleteSupermarketItem(supermarketItemId)
-    
+    def Total(self):
+        return sum(item.Total for item in self.SupermarketItems)
+
+    @property
+    def CheckedTotal(self):
+        return sum(item.Total for item in self.SupermarketItems if item.Checked)
+
+    def ToDict(self):
+        return {
+            "id": self.SupermarketListId,
+            "name": self.Name,
+            "position": self.Position,
+            "items": [item.ToDict() for item in self.SupermarketItems],
+            "total": round(self.Total, 2),
+            "checkedTotal": round(self.CheckedTotal, 2),
+            "ownerId": self.OwnerId,
+            "owner": self.OwnerName,
+            "shared": bool(self.Shared),
+        }

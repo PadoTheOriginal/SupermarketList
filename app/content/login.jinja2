@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)">
+    <title>Sign in - Shopping List</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/content/custom.css?v={{ asset_version }}">
+    <script>
+        (function () {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme === 'light' || theme === 'dark') {
+                    document.documentElement.dataset.theme = theme;
+                }
+            } catch (error) { /* private mode */ }
+        })();
+    </script>
+</head>
+
+<body class="login-page">
+    <svg class="sprite" aria-hidden="true" focusable="false">
+        <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></symbol>
+    </svg>
+
+    <main class="login-card">
+        <h1 class="brand">
+            <svg class="icon" aria-hidden="true"><use href="#i-cart"></use></svg>
+            <span>Shopping List</span>
+        </h1>
+        <p class="login-subtitle">Sign in to see your lists.</p>
+
+        {% if error %}
+        <p class="login-error" role="alert">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" class="login-form">
+            <label class="field block">
+                <span class="field-label">Username</span>
+                <input type="text" name="username" autocomplete="username" autocapitalize="none"
+                    autocorrect="off" required autofocus>
+            </label>
+
+            <label class="field block">
+                <span class="field-label">Password</span>
+                <input type="password" name="password" autocomplete="current-password" required>
+            </label>
+
+            <label class="checkbox-row">
+                <input type="checkbox" name="remember" value="1" checked>
+                <span>Keep me signed in</span>
+            </label>
+
+            <button class="button primary block" type="submit">Sign in</button>
+        </form>
+    </main>
+</body>
+
+</html>

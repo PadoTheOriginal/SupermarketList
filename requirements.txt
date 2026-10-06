@@ -1,4 +1,2 @@
-flask
-bcrypt
-flask_httpauth
-sqlite3
+flask>=3.0
+bcrypt>=4.0

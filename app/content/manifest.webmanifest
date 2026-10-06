@@ -1,0 +1,25 @@
+{
+    "name": "Shopping List",
+    "short_name": "List",
+    "description": "A fast shopping list you can use with one hand at the supermarket.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#f4f5fb",
+    "theme_color": "#4f46e5",
+    "icons": [
+        {
+            "src": "/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
+        }
+    ]
+}
